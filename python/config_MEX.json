@@ -1,0 +1,67 @@
+{
+  "_comment": "Country configuration for the PROST v2 synthetic base-year scripts. Copy this file as config_<ISO3>.json for another country and change the values. Nothing country-specific is hard-coded in the scripts.",
+
+  "country": "MEX",
+
+  "paths": {
+    "indir": "input",
+    "outdir": "output"
+  },
+
+  "files": {
+    "baseyear_data": "baseyear_data_MEX.dta",
+    "aggregates": "001-Data Aggregates.dta",
+    "pensioners": "pensioners_MEX.dta",
+    "wage_growth": "wage_growth_MEX.csv"
+  },
+
+  "sample_fraction": 0.10,
+  "seed": 12345,
+
+  "rebase": {
+    "_comment": "Move wages, account balances (with nominal wage growth) and pensions in payment (with CPI) from the year of the data to the base year of the projection, using the cumulative growth in the wage growth file (wage_growth and cpi in percent).",
+    "enabled": 1,
+    "data_year": 2020,
+    "base_year": 2024
+  },
+
+  "service_credit_before_records": {
+    "_comment": "Duncan's pre-1997 credit. The microdata are left-censored: affiliation and service are recorded only from records_start_year/month. For the DB class, affiliation before that date = age at that date minus a random age at first affiliation (uniform between start_min and start_max, by gender); service before = that affiliation x observed density x density_mult (at most 100%). DB class = the contrT contributors with the longest observed affiliation in each age x gender cell. Set enabled = 0 for a country whose records cover the whole career.",
+    "enabled": 1,
+    "records_start_year": 1997,
+    "records_start_fraction_of_year": 0.5,
+    "start_min_m": 16,
+    "start_max_m": 26,
+    "start_min_f": 17,
+    "start_max_f": 28,
+    "density_mult": 1.0
+  },
+
+  "reference_wage_cap": {
+    "_comment": "Reference wages above the average wage of working people of the same age are capped to that average for ages above max_age.",
+    "max_age": 65
+  },
+
+  "iacc_cap": {
+    "_comment": "Duncan marks this as MEXICO SPECIFIC: individual account balances are capped at los x reference_wage x share (about 1% of observations have very large balances). Set enabled = 0 to skip.",
+    "enabled": 1,
+    "share": 0.20
+  },
+
+  "gender_codes": {
+    "_comment": "Codes used in the data.",
+    "male": 1,
+    "female": 2
+  },
+
+  "pension_types": {
+    "_comment": "Aggregates file columns num<X>/pen<X> and the pension_id they map to. 1-3 = DB old-age/disability/survivor, 4-6 = DC old-age/disability/survivor.",
+    "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6
+  },
+
+  "annualize": {
+    "_comment": "Name (without extension) of the monthly synthetic file to convert to annual. Duncan's projector reads the 1 percent sample; the 00 scripts above write the 10 percent sample. Run the two 00 scripts with sample_fraction 0.01 for the file the projector expects, or change the projector's parameter.",
+    "monthly_file": "synthetic_affiliates_10pct_sample",
+    "n_quantiles": 10
+  }
+}
